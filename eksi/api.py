@@ -5,8 +5,6 @@ from datetime import datetime
 import requests
 from lxml import html
 
-from . import utils
-
 
 EKSI_BASE_URL = "https://eksisozluk.com/"
 EKSI_ENTRY_URL = EKSI_BASE_URL + "entry/"
