@@ -17,20 +17,26 @@ ENTRY_AUTHOR_XPATH = r'//*[@id="entry-item-list"]/li/footer/div[2]/a[2]'
 ENTRY_DATE_XPATH = r'//*[@id="entry-item-list"]/li/footer/div[2]/a[1]'
 
 
-# def download_api(start=1, end=None, access_token=None):
-#     """Download entry data between ids `start` amd `end`"""
-#     if not access_token:
-#         raise ConnectionError("Access Token must be given. "
-#                               "See https://eksisozluk.herokuapp.com")
-#  
-#     it = start
-#     while True:
-#         ret = requests.get(
-#             f"https://eksisozluk.herokuapp.com/api/entries/{it}", 
-#             params={ "accessToken": access_token }
-#         )
-#         it += 1
-#         return ret.text
+def _normalize_date(self, date: str) -> str:
+    """
+    Remove the modification date and split the datetime format into 
+    seperate date and time format.
+    Args:
+        date: Raw date time string
+    Returns:
+        tuple: Original date and time.
+    Example:
+        '18.05.2018 17:50 ~ 18:30' -> datetime(2018, 5, 18, 17, 50)
+    """
+    original_date = date.split(' ~ ')[0]
+    return datetime.strptime(original_date, '%d.%m.%Y %H:%M')
+
+
+def _is_entry_available(self, page_content: str) -> bool:
+    """Return false if the entry has been deleted."""
+    if 'data-not-found="true"' in page_content:
+        return False
+    return True
 
 
 def get_entry_by_id(entry_id):
@@ -51,7 +57,7 @@ def get_entry_by_id(entry_id):
     page_content = response.content.decode('utf-8')
 
     # pass if the entry has been 404'ed
-    if utils.is_entry_available(content):
+    if _is_entry_available(content):
         return None
     
     tree = html.fromstring(content)
@@ -60,7 +66,7 @@ def get_entry_by_id(entry_id):
     for elem in tree.xpath(ENTRY_BODY_XPATH + '//text()'):
         body_elems.append(elem.strip())
     body = " ".join(body_elems)
-    date = utils.normalize_date(
+    date = _normalize_date(
         tree.xpath(ENTRY_DATE_XPATH + '/text()')[0]
     )
     try:
