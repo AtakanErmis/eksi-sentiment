@@ -1,4 +1,4 @@
-"""Download entry data en masse and save the data to disk for later usage."""
+"""Sozlukten bilgiyi indirip uyumlu formata donusturur."""
 
 from datetime import datetime
 
@@ -13,6 +13,7 @@ ENTRY_BODY_XPATH = r'//*[@id="entry-item-list"]/li/div[1]'
 ENTRY_FAV_XPATH = r'//*[@id="entry-item-list"]/li/footer/div[1]/span[3]/a[2]'
 ENTRY_AUTHOR_XPATH = r'//a[@class="entry-author"]'
 ENTRY_DATE_XPATH = r'//a[@class="entry-date permalink"]'
+
 
 def _normalize_date(date: str) -> str:
     """
@@ -39,7 +40,7 @@ def _normalize_date(date: str) -> str:
 
 
 def _is_entry_available(page_content: str) -> bool:
-    """Return false if the entry has been deleted."""
+    """Entry silinmisse false return eder."""
     if 'data-not-found="true"' in page_content:
         return False
     return True
@@ -47,17 +48,18 @@ def _is_entry_available(page_content: str) -> bool:
 
 def get_entry_by_id(entry_id):
     """
-    Retrieve entry information from entry_id.
+    Entry numarasindan bilgiyi ayirir.
+
     Args:
-        entry_id: Entry ID
+        entry_id: Entry numarasi
     Returns:
-        dict object with keys:
-            - id: int, entry id
-            - owner: str, author of the entry
-            - body: str, entry text
-            - date: date, entry date (does not include modification date)
-            - fav: int, number of 'fav's
-        None if the specified entry cannot be found
+        dict objesi:
+            - id: int, entry numarasi
+            - owner: str, yazar ismi
+            - body: str, entry icerigi
+            - date: date, olusturulma tarihi
+            - fav: int, fav sayisi
+        Entry silinmisse None dondurur
     """
     response = requests.get(EKSI_ENTRY_URL + str(entry_id))
     page_content = response.content.decode('utf-8')
