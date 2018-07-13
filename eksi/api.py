@@ -46,7 +46,7 @@ def _is_entry_available(page_content: str) -> bool:
     return True
 
 
-def get_entry_by_id(entry_id):
+def get_entry_by_id(entry_id: int) -> dict:
     """
     Entry numarasindan bilgiyi ayirir.
 
