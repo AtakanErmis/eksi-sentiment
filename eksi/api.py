@@ -112,7 +112,7 @@ def get_entries_by_topic(topic: str) -> list:
         response = requests.get(url)
         page_content = response.content.decode('utf-8')
 
-        if 'data-not-found="true"' in page_content:
+        if not _is_entry_available(page_content):
             break
         
         tree = html.fromstring(page_content)
