@@ -19,7 +19,7 @@ TOPIC_ITEM_LIST_XPATH = r'//li[@data-author]'
 TOPIC_NEXT_PAGE_XPATH = r'//a[@class="next"]'
 
 
-def _normalize_date(date: str) -> str:
+def _normalize_date(date: str) -> datetime:
     """
     Modifiye edilme tarihini sil ve string olan tarih-zaman verisini datetime 
     objesine cevir.
