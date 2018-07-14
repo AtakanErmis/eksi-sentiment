@@ -9,8 +9,8 @@ from lxml import html
 EKSI_BASE_URL = "https://eksisozluk.com/"
 EKSI_ENTRY_URL = EKSI_BASE_URL + "entry/"
 
+ENTRY_ENTRY_XPATH = r'//li[@data-favorite-count]'
 ENTRY_BODY_XPATH = r'//*[@id="entry-item-list"]/li/div[1]'
-ENTRY_FAV_XPATH = r'//*[@id="entry-item-list"]/li/footer/div[1]/span[3]/a[2]'
 ENTRY_AUTHOR_XPATH = r'//a[@class="entry-author"]'
 ENTRY_DATE_XPATH = r'//a[@class="entry-date permalink"]'
 ENTRY_TOPIC_XPATH = r'//h1[@id="title"]'
@@ -83,7 +83,7 @@ def get_entry_by_id(entry_id: int) -> dict:
     topic = tree.xpath(ENTRY_TOPIC_XPATH)[0].get('data-title')
 
     try:
-        fav = int(tree.xpath(ENTRY_FAV_XPATH + '/text()')[0])
+        fav = int(tree.xpath(ENTRY_ENTRY_XPATH)[0].get('data-favorite-count'))
     except IndexError:
         # Bu eleman fav sayisi 0 ise olmuyor, index error veren durumlarda
         # fav sayisi 0 yani
