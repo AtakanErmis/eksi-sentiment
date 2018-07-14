@@ -13,6 +13,7 @@ ENTRY_BODY_XPATH = r'//*[@id="entry-item-list"]/li/div[1]'
 ENTRY_FAV_XPATH = r'//*[@id="entry-item-list"]/li/footer/div[1]/span[3]/a[2]'
 ENTRY_AUTHOR_XPATH = r'//a[@class="entry-author"]'
 ENTRY_DATE_XPATH = r'//a[@class="entry-date permalink"]'
+ENTRY_TOPIC_XPATH = r'//h1[@id="title"]'
 
 TOPIC_ITEM_LIST_XPATH = r'//li[@data-author]'
 TOPIC_NEXT_PAGE_XPATH = r'//a[@class="next"]'
@@ -67,9 +68,6 @@ def get_entry_by_id(entry_id: int) -> dict:
     response = requests.get(EKSI_ENTRY_URL + str(entry_id))
     page_content = response.content.decode('utf-8')
 
-    with open('content.html', 'w') as file:
-        print(page_content, file=file)
-
     if not _is_entry_available(page_content):
         return None
 
@@ -82,6 +80,8 @@ def get_entry_by_id(entry_id: int) -> dict:
     date = _normalize_date(
         tree.xpath(ENTRY_DATE_XPATH + '/text()')[0]
     )
+    topic = tree.xpath(ENTRY_TOPIC_XPATH)[0].get('data-title')
+
     try:
         fav = int(tree.xpath(ENTRY_FAV_XPATH + '/text()')[0])
     except IndexError:
@@ -93,6 +93,7 @@ def get_entry_by_id(entry_id: int) -> dict:
     entry = {
         'id': entry_id,
         'owner': owner,
+        'topic': topic,
         'body': body,
         'date': date,
         'fav': fav
@@ -123,6 +124,7 @@ def get_entries_by_topic(topic: str) -> list:
             entry = {
                 'id': int(elem.get("data-id")),
                 'owner': elem.get("data-author"),
+                'topic': topic,
                 'body': body,
                 'date': _normalize_date(date),
                 'fav': int(elem.get("data-favorite-count"))
