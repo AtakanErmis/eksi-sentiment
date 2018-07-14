@@ -85,8 +85,9 @@ def get_entry_by_id(entry_id: int) -> dict:
     try:
         fav = int(tree.xpath(ENTRY_FAV_XPATH + '/text()')[0])
     except IndexError:
-        # this element does not exist if the favcount of the entry is 0
-        # and so it raises IndexError
+        # Bu eleman fav sayisi 0 ise olmuyor, index error veren durumlarda
+        # fav sayisi 0 yani
+        # TODO: buna daha guzel bir cozum bulunacak
         fav = 0
 
     entry = {
@@ -132,8 +133,6 @@ def get_entries_by_topic(topic: str) -> list:
 
     return entries
 
-
-def get_entries_by_profile(profile_slug: str) -> list():
-    pass
+# TODO: Profil adindan entry alma yapilacak
 
 # TODO: Link verilip ona gore baslik alma da yapilacak.
