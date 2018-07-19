@@ -1,10 +1,12 @@
 import csv
 
+import fire
+
 from . import api
 
 
 def download_entries(path, start_id, end_id, verbose=True):
-    """ start_id - end_id arasi (start_id dahil, end_id haric) entry 
+    """ start_id - end_id arasi (start_id dahil, end_id haric) entry
     numarasina sahip entry'leri path adresindeki dosyaya yazar"""
     file_mode = 'w' if start_id == 1 else 'a'
     total = end_id - start_id
@@ -35,4 +37,5 @@ def download_entries(path, start_id, end_id, verbose=True):
                 )
 
 
-download_entries('data/deneme1.csv', 30558, 500_000)
+if __name__ == '__main__':
+    fire.Fire()
