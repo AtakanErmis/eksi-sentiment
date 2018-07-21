@@ -1,3 +1,31 @@
+import re
+
+
+# bkzlari match eder, ama sadece bkz icindeki text'i gruplara alir.
+REGEX_BKZ = re.compile(r"(?:\(bkz: )([a-z0-9 ]+)(?:\))")
+
+# string icinde yanyana gelmis ikiden fazla bosluk karakterini ve
+# stringin bas ve sonundaki herhangi bosluk kararkterini match eder
+REGEX_UNNEEDED_WHITESPACE = re.compile(r" {2,}")
+REGEX_TRIMMABLE_WHITESPACE = re.compile(r"^ *| *$")
+
+
+def _trim_spaces(string: str) -> str:
+    """
+    Verilen stringin icinden gereksiz bosluklari siler.
+    Return:
+        string: gereksiz bosluklari silinmis string
+    Example:
+        >>> _trim_spaces('abartili    deneme  yazisi')
+        'abartili deneme yazisi'
+    """
+    return re.sub(
+        REGEX_TRIMMABLE_WHITESPACE, 
+        '',
+        re.sub(REGEX_UNNEEDED_WHITESPACE, ' ', string)
+    )
+
+
 def remove_bkzs(string: str) -> str:
     """
     Verilen stringdeki `bakiniz` bloklarini siler.
@@ -7,7 +35,7 @@ def remove_bkzs(string: str) -> str:
         >>> remove_bkzs('yok artik (bkz: oha)')
         'yok artik'
     """
-    return
+    return _trim_spaces(re.sub(REGEX_BKZ, '', string))
 
 
 def get_bkzs(string: str) -> list:
@@ -20,7 +48,7 @@ def get_bkzs(string: str) -> list:
         >>> get_bkzs('(bkz: veni) (bkz: vidi) (bkz: vici)')
         ['veni', 'vidi', 'vici']
     """
-    return
+    return re.findall(REGEX_BKZ, string)
 
 
 def remove_numeric(string: str) -> str:
