@@ -52,10 +52,10 @@ def remove_links(string: str) -> str:
         >>> remove_links("google diye bir sey cikmis: http://google.com/")
         "google diye bir sey cikmis:"
     """
-    # link boşlukla ya da taksim ile bitecek şekilde çalışıyor
-    links = [i for i in re.search("(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?", string).group().split(" ") if i]
+    # silindikten sonra aralarda fazla boşluk olabiliyor
+    links = re.findall("(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?", string)
     for i in links:
-        string = string.replace(i, '')
+        string = string.replace(f"{i[0]}://{i[1]}{i[2]}", '')
     return string
 
 
