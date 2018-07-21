@@ -1,3 +1,5 @@
+import re
+
 def remove_bkzs(string: str) -> str:
     """
     Verilen stringdeki `bakiniz` bloklarini siler.
@@ -7,8 +9,11 @@ def remove_bkzs(string: str) -> str:
         >>> remove_bkzs('yok artik (bkz: oha)')
         'yok artik'
     """
-    return
-
+    ## bkz'ler silindikten sonra fazladan boşluklar oluşabiliyor.                                                                                                 
+    bkzs = re.findall("\(bkz:[^\)]+\)", string)
+    for i in bkzs:
+        string = string.replace(i, '')
+    return string
 
 def get_bkzs(string: str) -> list:
     """
@@ -20,7 +25,7 @@ def get_bkzs(string: str) -> list:
         >>> get_bkzs('(bkz: veni) (bkz: vidi) (bkz: vici)')
         ['veni', 'vidi', 'vici']
     """
-    return
+    return [i[1:] for i in re.findall("\(bkz:([^/)]+)\)", string)]
 
 
 def remove_numeric(string: str) -> str:
