@@ -24,7 +24,7 @@ class PreprocessTestCase(unittest.TestCase):
 
     def test_get_bkzs(self):
         entry = "(bkz: lorem ipsum) dolor sit (bkz: amet)"
-        expected = ["lorem ipsum", "dolor"]
+        expected = ["lorem ipsum", "amet"]
         product = preprocess.get_bkzs(entry)
         self.assertEqual(expected, product)
 
