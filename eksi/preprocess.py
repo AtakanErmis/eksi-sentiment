@@ -37,7 +37,10 @@ def remove_numeric(string: str) -> str:
         >>> remove_numeric("2018de cikan iphone 10 cok guzel.")
         "de cikan iphone cok guzel."
     """
-    return
+    numeric = re.findall("[0-9]", string)
+    for i in numeric:
+        string = string.replace(i, '')
+    return string
 
 
 def remove_links(string: str) -> str:
@@ -49,7 +52,11 @@ def remove_links(string: str) -> str:
         >>> remove_links("google diye bir sey cikmis: http://google.com/")
         "google diye bir sey cikmis:"
     """
-    return
+    # link boşlukla ya da taksim ile bitecek şekilde çalışıyor
+    links = [i for i in re.search("(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?", string).group().split(" ") if i]
+    for i in links:
+        string = string.replace(i, '')
+    return string
 
 
 def stem(string: str) -> str:
