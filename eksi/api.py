@@ -6,7 +6,7 @@ import requests
 from lxml import html
 
 
-EKSI_BASE_URL = "http://eksisozluk.com/"
+EKSI_BASE_URL = "https://eksisozluk.com/"
 EKSI_ENTRY_URL = EKSI_BASE_URL + "entry/"
 
 ENTRY_ENTRY_XPATH = r'//li[@data-favorite-count]'
