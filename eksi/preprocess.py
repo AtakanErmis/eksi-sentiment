@@ -4,6 +4,9 @@ import re
 # bkzlari match eder, ama sadece bkz icindeki text'i gruplara alir.
 REGEX_BKZ = re.compile(r"(?:\(bkz: )([a-z0-9 ]+)(?:\))")
 
+# noktalama işaretlerini match eder.
+REGEX_PUNC = re.compile(r"[.,:;!-?]")
+
 # string icinde yanyana gelmis ikiden fazla bosluk karakterini ve
 # stringin bas ve sonundaki herhangi bosluk kararkterini match eder
 REGEX_UNNEEDED_WHITESPACE = re.compile(r" {2,}")
@@ -63,7 +66,7 @@ def remove_numeric(string: str) -> str:
     numeric = re.findall("[0-9]", string)
     for i in numeric:
         string = string.replace(i, '')
-    return string
+    return _trim_spaces(string)
 
 
 def remove_links(string: str) -> str:
@@ -79,7 +82,8 @@ def remove_links(string: str) -> str:
     links = re.findall("(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?", string)
     for i in links:
         string = string.replace(f"{i[0]}://{i[1]}{i[2]}", '')
-    return string
+    return _trim_spaces(string)
+
 
 
 def stem(string: str) -> str:

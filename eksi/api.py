@@ -6,7 +6,7 @@ import requests
 from lxml import html
 
 
-EKSI_BASE_URL = "https://eksisozluk.com/"
+EKSI_BASE_URL = "http://eksisozluk.com/"
 EKSI_ENTRY_URL = EKSI_BASE_URL + "entry/"
 
 ENTRY_ENTRY_XPATH = r'//li[@data-favorite-count]'
@@ -14,6 +14,7 @@ ENTRY_BODY_XPATH = r'//*[@id="entry-item-list"]/li/div[1]'
 ENTRY_AUTHOR_XPATH = r'//a[@class="entry-author"]'
 ENTRY_DATE_XPATH = r'//a[@class="entry-date permalink"]'
 ENTRY_TOPIC_XPATH = r'//h1[@id="title"]'
+HTTP_HEADER = {"User-Agent":"Eksi-Sentiment"}
 
 TOPIC_ITEM_LIST_XPATH = r'//li[@data-author]'
 TOPIC_NEXT_PAGE_XPATH = r'//a[@class="next"]'
@@ -65,7 +66,7 @@ def get_entry_by_id(entry_id: int) -> dict:
             - fav: int, fav sayisi
         Entry silinmisse None dondurur
     """
-    response = requests.get(EKSI_ENTRY_URL + str(entry_id))
+    response = requests.get(EKSI_ENTRY_URL + str(entry_id), headers=HTTP_HEADER)
     page_content = response.content.decode('utf-8')
 
     if not _is_entry_available(page_content):
@@ -104,12 +105,12 @@ def get_entry_by_id(entry_id: int) -> dict:
 
 def get_entries_by_topic(topic: str) -> list:
     entries = []
-    topic_url = requests.get(EKSI_BASE_URL + f"?q={topic}").url
+    topic_url = requests.get(EKSI_BASE_URL + f"?q={topic}", headers=HTTP_HEADER).url
 
     page = 1
     while True:
         url = topic_url + f"?p={page}"
-        response = requests.get(url)
+        response = requests.get(url, headers=HTTP_HEADER)
         page_content = response.content.decode('utf-8')
 
         if not _is_entry_available(page_content):
